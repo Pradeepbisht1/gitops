@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd   # exporter lives here (you can change to observability)
+resources:
+  - rbac.yaml
+  - deployment.yaml
+  - service.yaml
+  - servicemonitor.yaml
+  # - networkpolicy.yaml  # uncomment if you enforce NetworkPolicies
+commonLabels:
+  app.kubernetes.io/name: sync-to-healthy-exporter
+  app.kubernetes.io/part-of: argocd-metrics
