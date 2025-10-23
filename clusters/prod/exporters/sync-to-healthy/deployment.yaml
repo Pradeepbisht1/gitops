@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-sync-to-healthy-exporter
+  namespace: argocd
+  labels:
+    app: sync-to-healthy-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sync-to-healthy-exporter
+  template:
+    metadata:
+      labels:
+        app: sync-to-healthy-exporter
+    spec:
+      serviceAccountName: argocd-apps-reader
+      containers:
+      - name: exporter
+        # Build & push your image first; or ask me for the POC (ConfigMap) variant
+        image: <REGISTRY>/argocd-sync-to-healthy-exporter:1.0.0
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: CLUSTER
+          value: "ap-south-1.prod-main"  # set a unique label per cluster/region
+        ports:
+        - name: http
+          containerPort: 8000
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          failureThreshold: 3
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+   
