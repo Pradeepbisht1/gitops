@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: argocd-sync-to-healthy-exporter
+  namespace: argocd
+  labels:
+    # If your Prometheus Operator selects ServiceMonitors by label (kube-prometheus-stack default), set this:
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: sync-to-healthy-exporter
+  namespaceSelector:
+    matchNames:
+      - argocd
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
