@@ -1,0 +1,120 @@
+{
+  "title": "Argo CD Sync→Healthy",
+  "uid": "argocd-sync-healthy",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "tags": ["argocd", "deployments", "slo"],
+  "time": { "from": "now-6h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "cluster",
+        "type": "query",
+        "datasource": null,
+        "query": "label_values(argocd_sync_to_healthy_seconds, cluster)",
+        "refresh": 1,
+        "current": { "selected": false, "text": ".*", "value": ".*" },
+        "regex": "",
+        "includeAll": true,
+        "multi": false
+      },
+      {
+        "name": "namespace",
+        "type": "query",
+        "datasource": null,
+        "query": "label_values(argocd_sync_to_healthy_seconds{cluster=~\"$cluster\"}, namespace)",
+        "refresh": 1,
+        "current": { "selected": false, "text": ".*", "value": ".*" },
+        "includeAll": true
+      },
+      {
+        "name": "application",
+        "type": "query",
+        "datasource": null,
+        "query": "label_values(argocd_sync_to_healthy_seconds{cluster=~\"$cluster\",namespace=~\"$namespace\"}, app)",
+        "refresh": 1,
+        "current": { "selected": false, "text": ".*", "value": ".*" },
+        "includeAll": true
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "p50 / p90 Sync→Healthy (seconds)",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (le, app) (rate(argocd_sync_to_healthy_seconds_bucket{cluster=~\"$cluster\",namespace=~\"$namespace\",app=~\"$application\"}[5m])))",
+          "legendFormat": "p50 {{app}}"
+        },
+        {
+          "expr": "histogram_quantile(0.9, sum by (le, app) (rate(argocd_sync_to_healthy_seconds_bucket{cluster=~\"$cluster\",namespace=~\"$namespace\",app=~\"$application\"}[5m])))",
+          "legendFormat": "p90 {{app}}"
+        }
+      ],
+      "options": {
+        "legend": { "displayMode": "list", "placement": "right" }
+      }
+    },
+    {
+      "type": "table",
+      "title": "Recent Healthy Transitions",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 10 },
+      "targets": [
+        {
+          "expr": "max by (app,namespace,revision,cluster) (argocd_healthy_last_timestamp{cluster=~\"$cluster\",namespace=~\"$namespace\",app=~\"$application\"})",
+          "legendFormat": ""
+        }
+      ],
+      "options": {
+        "showHeader": true
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "Time": 0,
+              "Value": 1,
+              "app": 2,
+              "namespace": 3,
+              "revision": 4,
+              "cluster": 5
+            },
+            "renameByName": {
+              "Value": "last_healthy_ts",
+              "app": "application"
+            }
+          }
+        }
+      },
+      "fieldConfig": {
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "application" },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open in Argo CD",
+                    "url": "https://<ARGOCD_HOST>/applications/${__value}?operation=true"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "last_healthy_ts" },
+            "properties": [
+              { "id": "unit", "value": "s" },
+              { "id": "custom.displayMode", "value": "color-background" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
