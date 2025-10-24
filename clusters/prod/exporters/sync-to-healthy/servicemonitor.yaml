@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: argocd-sync-to-healthy-exporter
-  namespace: argocd
+  namespace: exporter
   labels:
     # If your Prometheus Operator selects ServiceMonitors by label (kube-prometheus-stack default), set this:
     release: kube-prometheus-stack
