@@ -11,7 +11,7 @@ spec:
     path: clusters/prod/exporters/sync-to-healthy
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: exporter
   syncPolicy:
     automated:
       prune: true
