@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: argocd-sync-to-healthy-exporter
-  namespace: argocd
+  namespace: exporter
 spec:
   project: default
   source:
