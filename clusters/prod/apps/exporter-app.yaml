@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://<YOUR_GIT_REMOTE>/<ORG>/<REPO>.git
+    repoURL: https://github.com/Pradeepbisht1/gitops.git
     targetRevision: main
     path: clusters/prod/exporters/sync-to-healthy
   destination:
