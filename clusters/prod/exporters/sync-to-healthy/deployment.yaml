@@ -52,4 +52,4 @@ spec:
           runAsNonRoot: true
           allowPrivilegeEscalation: false
           runAsUser: 10001 
-          readOnlyRootFilesystem: false
+          readOnlyRootFilesystem: true
