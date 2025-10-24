@@ -12,7 +12,7 @@ spec:
       app: sync-to-healthy-exporter
   namespaceSelector:
     matchNames:
-      - argocd
+      - exporter
   endpoints:
   - port: http
     path: /metrics
