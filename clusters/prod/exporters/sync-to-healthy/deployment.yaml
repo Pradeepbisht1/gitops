@@ -23,7 +23,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: CLUSTER
-          value: "ap-south-1.prod-main"  # set a unique label per cluster/region
+          value: "us-east-1.prod-main"  # set a unique label per cluster/region
         ports:
         - name: http
           containerPort: 8000
