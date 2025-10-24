@@ -19,7 +19,7 @@ spec:
       containers:
       - name: exporter
         # Build & push your image first; or ask me for the POC (ConfigMap) variant
-        image: pb122136/argocd-sync-to-healthy-exporter:1.0.0
+        image: pb122136/argocd-sync-to-healthy-exporter:1.0.1
         imagePullPolicy: IfNotPresent
         env:
         - name: CLUSTER
