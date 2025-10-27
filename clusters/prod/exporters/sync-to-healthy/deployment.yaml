@@ -20,7 +20,7 @@ spec:
       serviceAccountName: argocd-apps-reader
       containers:
       - name: exporter
-        image: pb122136/argocd-sync-to-healthy-exporter:1.0.1
+        image: pb122136/argocd-sync-to-healthy-exporter:1.0.2
         imagePullPolicy: IfNotPresent
         env:
         - name: CLUSTER
