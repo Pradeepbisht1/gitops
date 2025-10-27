@@ -14,16 +14,17 @@ spec:
     metadata:
       labels:
         app: sync-to-healthy-exporter
+        # (Optional, helpful if you ever select by this in Prom stack)
+        release: kube-prometheus-stack
     spec:
       serviceAccountName: argocd-apps-reader
       containers:
       - name: exporter
-        # Build & push your image first; or ask me for the POC (ConfigMap) variant
         image: pb122136/argocd-sync-to-healthy-exporter:1.0.1
         imagePullPolicy: IfNotPresent
         env:
         - name: CLUSTER
-          value: "us-east-1.prod-main"  # set a unique label per cluster/region
+          value: "us-east-1.prod-main"
         ports:
         - name: http
           containerPort: 8000
@@ -51,5 +52,11 @@ spec:
         securityContext:
           runAsNonRoot: true
           allowPrivilegeEscalation: false
-          runAsUser: 10001 
+          runAsUser: 10001
           readOnlyRootFilesystem: true
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
