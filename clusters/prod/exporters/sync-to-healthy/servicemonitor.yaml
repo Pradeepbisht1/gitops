@@ -4,15 +4,14 @@ metadata:
   name: argocd-sync-to-healthy-exporter
   namespace: exporter
   labels:
-    # If your Prometheus Operator selects ServiceMonitors by label (kube-prometheus-stack default), set this:
     release: kube-prometheus-stack
 spec:
   selector:
     matchLabels:
       app: sync-to-healthy-exporter
+      
   namespaceSelector:
-    matchNames:
-      - exporter
+    matchNames: [exporter]
   endpoints:
   - port: http
     path: /metrics
