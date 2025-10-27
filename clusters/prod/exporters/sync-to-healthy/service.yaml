@@ -5,6 +5,7 @@ metadata:
   namespace: exporter
   labels:
     app: sync-to-healthy-exporter
+    release: kube-prometheus-stack
 spec:
   selector:
     app: sync-to-healthy-exporter
