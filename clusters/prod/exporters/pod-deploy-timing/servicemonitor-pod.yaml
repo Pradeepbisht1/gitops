@@ -1,0 +1,16 @@
+# This is for pod-level changes
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: pod-deploy-timing
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: pod-deploy-timing
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
