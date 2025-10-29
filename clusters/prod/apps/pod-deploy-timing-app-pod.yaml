@@ -1,0 +1,19 @@
+# This is for pod-level changes
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pod-deploy-timing
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  source:
+    repoURL: https://github.com/your-org/gitops
+    targetRevision: HEAD
+    path: clusters/prod/exporters/pod-deploy-timing
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
