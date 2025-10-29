@@ -1,0 +1,15 @@
+# This is for pod-level changes
+apiVersion: v1
+kind: Service
+metadata:
+  name: pod-deploy-timing
+  namespace: monitoring
+  labels:
+    app: pod-deploy-timing
+spec:
+  selector:
+    app: pod-deploy-timing
+  ports:
+  - name: http
+    port: 9108
+    targetPort: http
