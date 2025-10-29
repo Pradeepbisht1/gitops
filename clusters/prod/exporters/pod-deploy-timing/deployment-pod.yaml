@@ -19,12 +19,14 @@ spec:
       serviceAccountName: pod-deploy-timing
       containers:
       - name: exporter
-        image: docker.io/pb122136/argocd-sync-to-healthy-exporter:2.0.0 
+        image: docker.io/pb122136/argocd-sync-to-healthy-exporter:2.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
           containerPort: 9108
         env:
+        - name: PORT
+          value: "9108"   # This is for pod-level changes (make app listen on 9108)
         - name: LOG_LEVEL
           value: INFO
         - name: SCRAPE_INTERVAL_SECONDS
