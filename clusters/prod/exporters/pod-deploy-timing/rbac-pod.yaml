@@ -1,0 +1,31 @@
+# This is for pod-level changes
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-deploy-timing
+  namespace: monitoring
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pod-deploy-timing
+rules:
+- apiGroups: [""]
+  resources: ["pods", "namespaces"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["replicasets"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pod-deploy-timing
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pod-deploy-timing
+subjects:
+- kind: ServiceAccount
+  name: pod-deploy-timing
+  namespace: monitoring
