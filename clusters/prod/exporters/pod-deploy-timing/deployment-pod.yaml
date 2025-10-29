@@ -19,7 +19,7 @@ spec:
       serviceAccountName: pod-deploy-timing
       containers:
       - name: exporter
-        image: ghcr.io/your-org/pod-deploy-timing:v1.0.0
+        image: docker.io/pb122136/pod-deploy-timing:v2.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
