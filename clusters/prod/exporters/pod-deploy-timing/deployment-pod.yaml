@@ -1,0 +1,70 @@
+# This is for pod-level changes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-deploy-timing
+  namespace: monitoring
+  labels:
+    app: pod-deploy-timing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-deploy-timing
+  template:
+    metadata:
+      labels:
+        app: pod-deploy-timing
+    spec:
+      serviceAccountName: pod-deploy-timing
+      containers:
+      - name: exporter
+        image: ghcr.io/your-org/pod-deploy-timing:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 9108
+        env:
+        - name: LOG_LEVEL
+          value: INFO
+        - name: SCRAPE_INTERVAL_SECONDS
+          value: "15"
+        # Leave NAMESPACES empty to scan ALL namespaces
+        # - name: NAMESPACES
+        #   value: "temporal,default,monitoring"   # This is for pod-level changes
+        # Optional Argo API for revision + app sync duration
+        # - name: ARGOCD_BASE
+        #   value: "http://argocd-server.argocd.svc.cluster.local:80"   # This is for pod-level changes
+        # - name: ARGOCD_BEARER_TOKEN
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: argocd-readonly
+        #       key: token
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop: ["ALL"]
+      securityContext:
+        fsGroup: 10001
