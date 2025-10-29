@@ -6,7 +6,3 @@ resources:
   - deployment-pod.yaml
   - service-pod.yaml
   - servicemonitor-pod.yaml
-images:
-  - name: ghcr.io/your-org/pod-deploy-timing
-    newName: docker.io/pb122136/pod-deploy-timing   # This is for pod-level changes
-    newTag: v2.0.0                                   # This is for pod-level changes
