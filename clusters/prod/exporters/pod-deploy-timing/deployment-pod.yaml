@@ -1,4 +1,3 @@
-# This is for pod-level changes
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,17 +25,20 @@ spec:
           containerPort: 9108
         env:
         - name: PORT
-          value: "9108"   # This is for pod-level changes (make app listen on 9108)
+          value: "9108"
         - name: LOG_LEVEL
           value: INFO
         - name: SCRAPE_INTERVAL_SECONDS
           value: "15"
-        # Leave NAMESPACES empty to scan ALL namespaces
-        # - name: NAMESPACES
-        #   value: "temporal,default,monitoring"   # This is for pod-level changes
-        # Optional Argo API for revision + app sync duration
+        # 🔑 Per-pod timing enable:
+        - name: METRIC_CARDINALITY
+          value: "high"
+        # (Optional) Agar DaemonSets bhi track karna ho:
+        # - name: ALLOWED_KINDS
+        #   value: "Deployment,StatefulSet,DaemonSet"
+        # (Optional) ArgoCD details chahiye to uncomment:
         # - name: ARGOCD_BASE
-        #   value: "http://argocd-server.argocd.svc.cluster.local:80"   # This is for pod-level changes
+        #   value: "http://argocd-server.argocd.svc.cluster.local:80"
         # - name: ARGOCD_BEARER_TOKEN
         #   valueFrom:
         #     secretKeyRef:
