@@ -6,7 +6,7 @@ metadata:
   labels:
     app: sync-to-healthy-exporter
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: sync-to-healthy-exporter
@@ -20,7 +20,7 @@ spec:
       serviceAccountName: argocd-apps-reader
       containers:
       - name: exporter
-        image: pb122136/argocd-sync-to-healthy-exporter:1.1.0
+        image: pb122136/argocd-sync-to-healthy-exporter:1.2.0
         imagePullPolicy: IfNotPresent
         env:
         - name: CLUSTER
